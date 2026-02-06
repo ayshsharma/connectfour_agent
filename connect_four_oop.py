@@ -8,8 +8,8 @@ class Player: # class
     def get_move(self, board):
         """Prompt the player for a move."""
         while True:
-            try:
-                return int(input(f"{self.name}, choose a column (0-6): "))
+            try: # Added minor error handling to code
+                return int(input(f"{self.name}, choose a column (0-6): ")) 
             except ValueError:
                 print("Please enter a number between 0 and 6")
 
@@ -86,7 +86,7 @@ class Agent:
                         bad_moves.append(col)
                         break
         
-        safe_moves = [c for c in valid_cols if c not in bad_moves]
+        safe_moves = [c for c in valid_cols if c not in bad_moves] # Set of all the safe moves that can be played
 
         #1.) A winning move is available. Play the winning move
         for col in valid_cols:
@@ -101,12 +101,13 @@ class Agent:
                 return col
         
         #3.) In case none of the above moves are available, the agent tries to choose a column closest to the center, to maximise future possibilities
+        # The agent now uses the safe moves that were computed earlier to make sure it doesn't accidentally give the user a winning move
         candidate_moves = safe_moves if safe_moves else valid_cols
         center = board.shape[1]//2
-        preferred_order = sorted(candidate_moves, key= lambda x: abs(x-center))
+        preferred_order = sorted(candidate_moves, key= lambda x: abs(x-center)) # Sorts all possible moves, with the ones closest to center being first
         best_col = preferred_order[0]
         if best_col == center:
-            return best_col
+            return best_col # Always plays the center column if available
         # Choosing randomly between the columns closest to the center if the center itself isn't available
         min_dist = abs(best_col - center)
         closest = [c for c in preferred_order if abs(c-center) == min_dist]
@@ -201,7 +202,7 @@ class ConnectFourGame:
         while True:
             col = player.get_move(self.board)
 
-            if not isinstance(col, int):
+            if not isinstance(col, int): # Added minor error handling, again
                 print("The column you entered is invalid. Please enter a column between 0-6")
                 continue
 
