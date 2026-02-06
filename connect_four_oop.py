@@ -20,10 +20,10 @@ class Agent:
         valid_cols = [c for c in range(board.shape[1]) if board[5][c]==0]        
         return valid_cols
     
-    def ai_get_next_open_row(self, col):
+    def ai_get_next_open_row(self, board, col):
         """Get the next open row in a column."""
-        for r in range(6):
-            if self.board[r][col] == 0:
+        for r in range(board.shape[0]):
+            if board[r][col] == 0:
                 return r
         return None
     
@@ -36,7 +36,7 @@ class Agent:
                     return True
         # Vertical
         for c in range(cols):
-            for r in range(r-3):
+            for r in range(rows-3):
                 if (board[r][c]==piece and board[r+1][c]==piece and board[r+2][c]==piece and board[r+3][c]==piece):
                     return True
         # Positively sloped diagonal
@@ -54,7 +54,7 @@ class Agent:
     
     def simulate_drop(self, board, col, piece):
         """Simulate a board in the background to check play moves on, thereby checking if the move being played is a winning one"""
-        r = self.ai_get_next_open_row(col)
+        r = self.ai_get_next_open_row(board, col)
 
         if r is None:
             return None
@@ -77,8 +77,8 @@ class Agent:
             ai_turn = self.simulate_drop(board, col, self.piece)
             if ai_turn is not None:
                 opp_valid_cols = [c for c in range(ai_turn.shape[1]) if ai_turn[5][c]==0]
-                for opp_cols in opp_valid_cols:
-                    user_turn = self.simulate_drop(ai_turn, opp_cols, self.opponent_piece)
+                for opp_col in opp_valid_cols:
+                    user_turn = self.simulate_drop(ai_turn, opp_col, self.opponent_piece)
                     if user_turn is not None and self.ai_winning_move(user_turn, self.opponent_piece):
                         bad_moves.append(col)
                         break
