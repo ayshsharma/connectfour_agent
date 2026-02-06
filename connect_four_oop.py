@@ -7,8 +7,11 @@ class Player: # class
 
     def get_move(self, board):
         """Prompt the player for a move."""
-        col = int(input(f"{self.name}, choose a column (0-6): "))
-        return col
+        while True:
+            try:
+                return int(input(f"{self.name}, choose a column (0-6): "))
+            except ValueError:
+                print("Please enter a number between 0 and 6")
 
 class Agent:
     def __init__(self, name:str, piece:int, opponent_piece:int = 1):
@@ -199,6 +202,10 @@ class ConnectFourGame:
             col = player.get_move(self.board)
 
             if not isinstance(col, int):
+                print("The column you entered is invalid. Please enter a column between 0-6")
+                continue
+
+            if col < 0 or col >= self.board.shape[1]:
                 print("The column you entered is invalid. Please enter a column between 0-6")
                 continue
 
